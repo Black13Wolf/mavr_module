@@ -1,16 +1,6 @@
-def obs_set():
-    pass
-
-def night():
-    pass
-
-def star():
-    pass
-    
 def spool(main_path, output_dir, output_name=False, name='spool'):
     from os import walk, path
     from numpy import memmap, where
-
     if not output_name:
         output_name = path.basename(main_path)
     spools=[]
