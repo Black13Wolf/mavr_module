@@ -1,20 +1,16 @@
-def get_ps(path_to_dat, diff=0, acf=False, save=False, showing=False):
+def get_ps(path_to_dat, diff=0, acf=False, save=False):
     from numpy import memmap, zeros, fft
     from os.path import basename
     serie = memmap(path_to_dat, dtype='uint16')
-    frames = serie.size/512/512
+    frames = int(serie.size/512/512)
     serie = serie.reshape((frames, 512, 512))
     ps = zeros((512,512))
     for num in range(frames):
         if diff and num<frames-diff:
-            ps += abs(fft.fft2(serie[i] - serie[i+diff]))
+            ps += abs(fft.fft2(serie[num] - serie[num+diff]))
         else:
-            ps += abs(fft.fft2(serie[i]))
+            ps += abs(fft.fft2(serie[num]))
     ps /= frames            
-    if showing:
-        from matplotlib.pyplot import imshow, show
-        imshow(ps, cmap='gray')
-        show()
     acf = abs(fft.ifft2(ps))
     if save:
         if save == 'fits':
@@ -24,4 +20,4 @@ def get_ps(path_to_dat, diff=0, acf=False, save=False, showing=False):
         else:
             print('Unknown format: {}'.format(save))
     else:
-        return fft.fftshift(ps), fft.fftshift(acf)    
+        return fft.fftshift(ps), fft.fftshift(acf)
