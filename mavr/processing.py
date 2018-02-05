@@ -2,7 +2,7 @@ def get_ps(path_to_dat, diff=0, acf=False, save=False, showing=False):
     from numpy import memmap, zeros, fft
     from os.path import basename
     serie = memmap(path_to_dat, dtype='uint16')
-    frames = serie.size()/512/512
+    frames = serie.size/512/512
     serie = serie.reshape((frames, 512, 512))
     ps = zeros((512,512))
     for num in range(frames):
