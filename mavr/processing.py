@@ -1,23 +1,35 @@
-def get_ps(path_to_dat, diff=0, acf=False, save=False):
-    from numpy import memmap, zeros, fft
-    from os.path import basename
-    serie = memmap(path_to_dat, dtype='uint16')
+def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=False):
+    from numpy import memmap, zeros, fft, any
+    from os.path import basename, join
+    from matplotlib.pyplot import imshow, show
+    if output:
+        output_file = join(output, basename(path_to_dat))
+    else:
+        output_file = path_to_dat
+    serie = memmap(path_to_dat, dtype='uint16').astype('float32')
     frames = int(serie.size/512/512)
     serie = serie.reshape((frames, 512, 512))
-    ps = zeros((512,512))
+    output_ps = zeros(shape)
     for num in range(frames):
+        frame = zeros(shape)
         if diff and num<frames-diff:
-            ps += abs(fft.fft2(serie[num] - serie[num+diff]))
+            frame[:512, :512] += serie[num] - serie[num+diff]
         else:
-            ps += abs(fft.fft2(serie[num]))
-    ps /= frames            
-    acf = abs(fft.ifft2(ps))
+            frame[:512, :512] += serie[num]
+        output_ps += abs(fft.fft2(frame)**2)                                                                                                                                                                                                                                                                                                                                                                                            
+    output_ps /= frames            
+    if acf: output_acf = abs(fft.ifft2(fft.fftshift(output_ps)))
     if save:
         if save == 'fits':
             from astropy.io import fits
-            fits.tofile(path_to_dat+'_ps.fits', ps)
-            fits.tofile(path_to_dat+'_acf.fits', acf)
+            fits.writeto(output_file+'_ps_diff{}_shape{}.{}'.format(diff, shape, save), fft.fftshift(output_ps))
+            if acf: fits.writeto(output_file+'_acf_diff{}_shape{}.{}'.format(diff, shape, save), fft.fftshift(output_acf))
         else:
             print('Unknown format: {}'.format(save))
     else:
-        return fft.fftshift(ps), fft.fftshift(acf)
+        if acf:
+            return fft.fftshift(output_ps), fft.fftshift(output_acf)
+        else:
+            return fft.fftshift(output_ps)
+    
+    
