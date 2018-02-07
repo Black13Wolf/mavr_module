@@ -1,7 +1,6 @@
-def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=False, rmbgr_on=True):
+﻿def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=False, rmbgr_on=True):
     from numpy import memmap, zeros, fft, any
     from os.path import basename, join
-    from matplotlib.pyplot import imshow, show
     if output:
         output_file = join(output, basename(path_to_dat))
     else:
@@ -18,7 +17,7 @@ def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=F
             frame[:512, :512] += serie[num]
         output_ps += abs(fft.fft2(frame)**2)                                                                                                                                                                                                                                                                                                                                                                                            
     output_ps /= frames  
-    if rmbgr_on: output_ps = rmbgr(fft.fftshift(output_ps), 200)
+    if rmbgr_on: output_ps = rmbgr(fft.fftshift(output_ps), 100)
     #output_ps[500:524, 500:524] = 0 Устранение центрального пика СПМ. Сделать сглаживание в будущем.
     output_ps = fft.fftshift(output_ps)
           
