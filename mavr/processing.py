@@ -18,7 +18,10 @@ def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=F
             frame[:512, :512] += serie[num]
         output_ps += abs(fft.fft2(frame)**2)                                                                                                                                                                                                                                                                                                                                                                                            
     output_ps /= frames  
-    if rmbgr_on: output_ps = rmbgr(output_ps, 450)          
+    if rmbgr_on: output_ps = rmbgr(fft.fftshift(output_ps), 200)
+    #output_ps[500:524, 500:524] = 0 Устранение центрального пика СПМ. Сделать сглаживание в будущем.
+    output_ps = fft.fftshift(output_ps)
+          
     if acf: output_acf = abs(fft.ifft2(fft.fftshift(output_ps)))
     if save:
         if save == 'fits':
@@ -35,7 +38,7 @@ def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=F
     
 def rmbgr(middle_star, xlim): 
     from numpy import mean
-    outbound = middle_star[xlim:512,0:512] 
+    outbound = middle_star[0:xlim] 
     slice_out = mean(outbound, axis=0) 
     middle_star_clean = middle_star - slice_out 
     return middle_star_clean 
