@@ -1,4 +1,4 @@
-def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=False):
+def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=False, rmbgr_on=True):
     from numpy import memmap, zeros, fft, any
     from os.path import basename, join
     from matplotlib.pyplot import imshow, show
@@ -17,7 +17,8 @@ def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=F
         else:
             frame[:512, :512] += serie[num]
         output_ps += abs(fft.fft2(frame)**2)                                                                                                                                                                                                                                                                                                                                                                                            
-    output_ps /= frames            
+    output_ps /= frames  
+    if rmbgr_on: output_ps = rmbgr(output_ps, 450)          
     if acf: output_acf = abs(fft.ifft2(fft.fftshift(output_ps)))
     if save:
         if save == 'fits':
@@ -32,4 +33,9 @@ def get_ps(path_to_dat, diff=0, acf=False, save=False, shape=(512,512), output=F
         else:
             return fft.fftshift(output_ps)
     
-    
+def rmbgr(middle_star, xlim): 
+    from numpy import mean
+    outbound = middle_star[xlim:512,0:512] 
+    slice_out = mean(outbound, axis=0) 
+    middle_star_clean = middle_star - slice_out 
+    return middle_star_clean 
