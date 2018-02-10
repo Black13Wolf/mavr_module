@@ -7,5 +7,5 @@ setup(name='mavr_module',
       author_email='beskakotov.as@gmail.com',
       url='https://github.com/Black13Wolf/mavr_module',
       packages=['mavr',],
-      install_requires=['numpy', 'astropy'],
+      install_requires=['numpy', 'astropy', 'matplotlib'],
      )
