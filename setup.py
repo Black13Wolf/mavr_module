@@ -1,6 +1,6 @@
 #from distutils.core import setup
 from setuptools import setup
-from __init__ import __version__
+from mavr import __version__
 setup(name='mavr_module',
       version=__version__,
       description='SubModules for MAVR SAO RAN',
