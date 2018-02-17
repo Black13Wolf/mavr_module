@@ -41,3 +41,10 @@ def rmbgr(middle_star, xlim):
     slice_out = mean(outbound, axis=0) 
     middle_star_clean = middle_star - slice_out 
     return middle_star_clean 
+
+def partickle_searcher(frame):
+    '''
+        Функция будет анализировать кадр (или серию кадров) на поиск перекопов или частиц и выдавать номера кадров, допущенные к расчетам.
+        не более 50 кадров можно выкинуть из серии 2000 кадров. То есть не более %2.5 от общего количества кадров в серии.
+    '''
+    pass
