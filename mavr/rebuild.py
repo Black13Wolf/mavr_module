@@ -51,7 +51,7 @@ def big_tif(path_to_dir, output_dir):
     output_name = path.basename(path_to_dir)
     tiffs = list(walk(path_to_dir))[0][2]
     if stat(path.join(path_to_dir, 'spool.tif')).st_size == 8:
-        print('{}: Ошибка в директории. Пересоберите вручную.'.format(.main_path))
+        print('{}: Ошибка в директории. Пересоберите вручную.'.format(main_path))
     elif len(tiffs) == 1:
         serie = Image.open(path.join(path_to_dir, 'spool.tif'))
         frames = serie.n_frames
