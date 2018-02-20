@@ -45,7 +45,7 @@ def serie_tif(path_to_dir, output_dir):
 def big_tif(path_to_dir, output_dir):
     from PIL import Image
     from numpy import array, uint16
-    from os import stat
+    from os import stat, path, walk
     output_name = path.basename(path_to_dir)
     serie = Image.open(path.join(path_to_dir,'spool.tif'))
     output_name = path.basename(path_to_dir)
