@@ -28,21 +28,21 @@ def spool(main_path, output_dir, output_name=False, name='spool'):
                 with open(path.join(output_dir, output_name+'.dat'), 'ab') as f:
                     f.write(datfile)
         
-def serie_tif(self, path_to_dir, output_dir):
+def serie_tif(path_to_dir, output_dir):
     from PIL import Image
     from numpy import array, uint16
     from os import walk, path
-    output_name = path.basename(path_to_dir)
+    output_name = path.basename(path_to_dir)+'.dat'
     files = list(walk(path_to_dir))[0][2]
     for f in files:
         if f.endswith('.jpg') or f.endswith('.jpeg') or f.endswith('.png') or f.endswith('.tif') or f.endswith('.gif'):
             img_path = path.join(path_to_dir, f)
             img = Image.open(img_path).convert('I')
             img = array(img).astype('uint16')
-            with open(path.join(output_dir, output), 'ab') as output:
+            with open(path.join(output_dir, output_name), 'ab') as output:
                 output.write(img)
 
-def big_tif(self):
+def big_tif(path_to_dir, output_dir):
     from PIL import Image
     from numpy import array, uint16
     from os import stat
@@ -51,14 +51,13 @@ def big_tif(self):
     output_name = path.basename(path_to_dir)
     tiffs = list(walk(path_to_dir))[0][2]
     if stat(path.join(path_to_dir, 'spool.tif')).st_size == 8:
-        with open(self.logfile, 'a+') as log:
-            log.write('{}: Ошибка в директории. Пересоберите вручную.\n'.format(self.main_path))
+        print('{}: Ошибка в директории. Пересоберите вручную.'.format(.main_path))
     elif len(tiffs) == 1:
         serie = Image.open(path.join(path_to_dir, 'spool.tif'))
         frames = serie.n_frames
         for i in range(frames):
             serie.seek(i)
-            with open(path.join(self.output_dir, output_name+'.dat'), 'ab') as output:
+            with open(path.join(output_dir, output_name+'.dat'), 'ab') as output:
                 output.write(array(serie).astype('uint16'))
     else:
         for f in tiffs:
@@ -69,5 +68,5 @@ def big_tif(self):
                 frames = serie.n_frames
                 for i in range(frames):
                     serie.seek(i)
-                    with open(path.join(self.output_dir, output_name+'.dat'), 'ab') as output:
+                    with open(path.join(output_dir, output_name+'.dat'), 'ab') as output:
                         output.write(array(serie).astype('uint16'))
