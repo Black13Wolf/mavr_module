@@ -10,6 +10,7 @@ def spool(main_path, output_dir):
     for spool in spools:
         spool_num += 1
         files = list(walk(path.join(main_path, 'spool', spool)))[0][2]
+        files.sort()
         for f in files:
             datfile = memmap(path.join(main_path, 'spool', spool, f), dtype='uint16')
             if any(datfile == 0):
@@ -30,6 +31,7 @@ def serie_tif(path_to_dir, output_dir):
     from PIL import Image
     from numpy import array, uint16
     from os import walk, path
+
     files = list(walk(path_to_dir))[0][2]
     for f in files:
         if f.endswith('.jpg') or f.endswith('.jpeg') or f.endswith('.png') or f.endswith('.tif') or f.endswith('.gif'):
@@ -57,13 +59,11 @@ def big_tif(path_to_dir, output_dir):
                 output.write(array(serie).astype('uint16'))
     else:
         for f in tiffs:
-            print(f)
             if stat(path.join(path_to_dir, f)).st_size == 8:
                 continue
             else:
                 serie = Image.open(path.join(path_to_dir, f))
                 frames = serie.n_frames
-                print(frames)
                 for i in range(frames):
                     serie.seek(i)
                     with open(path.join(output_dir+'.dat'), 'ab') as output:
